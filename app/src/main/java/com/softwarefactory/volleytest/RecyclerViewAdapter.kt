@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.softwarefactory.volleytest.model.Post
 
 
 class RecyclerViewAdapter(private var list:List<Post>): RecyclerView.Adapter<RecyclerViewAdapter.MyHolder>(){

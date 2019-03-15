@@ -5,46 +5,15 @@ import com.android.volley.VolleyError
 import org.json.JSONException
 import org.json.JSONObject
 
-/**
- * Model class of Server Error Object.
- *
- * @author Ambrose
- */
 class ServerError : VolleyError {
-
-    /**
-     * Getter method of error code.
-     *
-     * @return Error code.
-     */
     var errorCode: Int = 0
 
     private var mErrorMessage: String? = null
-
-    /**
-     * No argument constructor.
-     */
     constructor() : super() {}
-
-    /**
-     * Constructor class for Server Error object.
-     *
-     * @param code Error code.
-     * @param msg  Error message.
-     */
     constructor(code: Int, msg: String) : super() {
         errorCode = code
         mErrorMessage = msg
     }
-
-    /**
-     * Constructor class for Server Error object. Parse json object to Server
-     * Error object.
-     *
-     * @param json Error object with json format.
-     * @throws JSONException If key name is not exists in json object, will
-     * throw.
-     */
     @Throws(JSONException::class)
     constructor(json: JSONObject) {
         errorCode = json.getInt("err_code")
@@ -63,12 +32,6 @@ class ServerError : VolleyError {
         return ("ServerError (code=" + errorCode + ", msg=" + mErrorMessage
                 + ")")
     }
-
-    /**
-     * Server Error Codes.
-     *
-     * @author Ambrose
-     */
     object Code {
 
         /**

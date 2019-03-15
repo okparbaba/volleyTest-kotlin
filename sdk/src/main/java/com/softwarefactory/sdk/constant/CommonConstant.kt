@@ -9,7 +9,7 @@ object CommonConstant {
     //public static final String TAG = ServerRequestManager.class.getSimpleName();
 
     /*** Engleezi  */
-    val WEB_SERVICE_URL = "http://service.myengleezi.com/mobileservice.asmx/Execute"
+    val WEB_SERVICE_URL = "https://jsonplaceholder.typicode.com/posts"
     val WHITEBOARD_URL = "https://edu.myengleezi.com/ClassRoom/mBoard.htm"
     val PAYPAL_URL = "https://www.sandbox.paypal.com"
 

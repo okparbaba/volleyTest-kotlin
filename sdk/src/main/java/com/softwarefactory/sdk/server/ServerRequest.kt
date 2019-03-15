@@ -17,19 +17,11 @@ import java.util.HashMap
 import java.util.Locale
 
 
-class ServerRequest
-/**
- * Constructor with json object parameter.
- *
- * @param requestObj       Request object to parse to server.
- * @param responseListener Server response listener.
- * @param errorListener    Request error listener.
- */
-    (
+class ServerRequest(
     private val mContext: Context, command: String, requestObj: JSONObject,
     private val mListener: Response.Listener<ServerResponse>?,
     errorListener: Response.ErrorListener
-) : Request<ServerResponse>(Request.Method.POST, CommonConstant.WEB_SERVICE_URL, errorListener) {
+    ) : Request<ServerResponse>(Request.Method.POST, CommonConstant.WEB_SERVICE_URL, errorListener) {
     private val mParams: MutableMap<String, String>
 
     init {
@@ -87,53 +79,59 @@ class ServerRequest
             val responseObj = ServerResponse()
 
             val code = jsonObject.getInt("Code")
-            if (code == ServerResponse.Status.SUCCESS) {
-                responseObj.dataSt = jsonObject.getString("Data")
-                responseObj.code = code
-                return Response.success(
-                    responseObj,
-                    HttpHeaderParser.parseCacheHeaders(response)
-                )
-            } else if (code == ServerResponse.Status.NO_DATA) {
-                responseObj.message = mContext.getString(R.string.no_data)
-                responseObj.code = code
-                return Response.success(
-                    responseObj,
-                    HttpHeaderParser.parseCacheHeaders(response)
-                )
-            } else if (code == ServerResponse.Status.Account_PasswordError) {
-                responseObj.message = mContext.getString(R.string.wrong_password)
-                responseObj.code = code
-                return Response.success(
-                    responseObj,
-                    HttpHeaderParser.parseCacheHeaders(response)
-                )
-            } else if (code == ServerResponse.Status.Account_EmailAlreadyExit) {
-                responseObj.message = mContext.getString(R.string.email_exist)
-                responseObj.code = code
-                return Response.success(
-                    responseObj,
-                    HttpHeaderParser.parseCacheHeaders(response)
-                )
-            } else if (code == ServerResponse.Status.INSUFFICIENT_CREDIT) {
-                responseObj.message = jsonObject.getString("Message")
-                responseObj.code = code
-                return Response.success(
-                    responseObj,
-                    HttpHeaderParser.parseCacheHeaders(response)
-                )
-            } else {
-                var serverError: ServerError
-                try {
-                    serverError = ServerError(
-                        jsonObject
-                            .getJSONObject("Message")
+            when (code) {
+                ServerResponse.Status.SUCCESS -> {
+                    responseObj.dataSt = jsonObject.getString("Data")
+                    responseObj.code = code
+                    return Response.success(
+                        responseObj,
+                        HttpHeaderParser.parseCacheHeaders(response)
                     )
-                } catch (jse: JSONException) {
-                    serverError = ServerError(ServerError.Code.JSON_EXCEPTION, jsonObject.getString("Message"))
                 }
+                ServerResponse.Status.NO_DATA -> {
+                    responseObj.message = mContext.getString(R.string.no_data)
+                    responseObj.code = code
+                    return Response.success(
+                        responseObj,
+                        HttpHeaderParser.parseCacheHeaders(response)
+                    )
+                }
+                ServerResponse.Status.Account_PasswordError -> {
+                    responseObj.message = mContext.getString(R.string.wrong_password)
+                    responseObj.code = code
+                    return Response.success(
+                        responseObj,
+                        HttpHeaderParser.parseCacheHeaders(response)
+                    )
+                }
+                ServerResponse.Status.Account_EmailAlreadyExit -> {
+                    responseObj.message = mContext.getString(R.string.email_exist)
+                    responseObj.code = code
+                    return Response.success(
+                        responseObj,
+                        HttpHeaderParser.parseCacheHeaders(response)
+                    )
+                }
+                ServerResponse.Status.INSUFFICIENT_CREDIT -> {
+                    responseObj.message = jsonObject.getString("Message")
+                    responseObj.code = code
+                    return Response.success(
+                        responseObj,
+                        HttpHeaderParser.parseCacheHeaders(response)
+                    )
+                }
+                else -> {
+                    var serverError: ServerError = try {
+                        ServerError(
+                            jsonObject
+                                .getJSONObject("Message")
+                        )
+                    } catch (jse: JSONException) {
+                        ServerError(ServerError.Code.JSON_EXCEPTION, jsonObject.getString("Message"))
+                    }
 
-                return Response.error(serverError)
+                    return Response.error(serverError)
+                }
             }
         } catch (uee: UnsupportedEncodingException) {
             Log.e(TAG, "Unsupported Encoding Exception", uee)

@@ -3,7 +3,6 @@ package com.softwarefactory.volleytest
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +12,7 @@ import com.android.volley.toolbox.Volley
 import com.softwarefactory.sdk.server.ServerError
 import com.softwarefactory.sdk.server.ServerRequestManager
 import com.softwarefactory.sdk.server.ServerResponse
+import com.softwarefactory.volleytest.model.Post
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView:RecyclerView
     private lateinit var postList: MutableList<Post>
     private lateinit var layoutManager: LinearLayoutManager
-    internal lateinit var recyclerViewAdapter:RecyclerViewAdapter
+    private lateinit var recyclerViewAdapter:RecyclerViewAdapter
+    lateinit var url:String
 
 
     //Testing for request string
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        url = stringFromJNI()
         serverRequestManager = ServerRequestManager(this)
         recyclerView = findViewById(R.id.recyclerView)
         postList = ArrayList()
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    val url = stringFromJNI()
+
     private fun getData() {
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Loading...")
@@ -125,49 +126,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+
 }
-//
-//    fun onSuccess(response: ServerResponse) {
-//        try {
-//            val dataObj = JSONObject(response.getDataSt())
-//            val creditSt = dataObj.getString("credit")
-//            creditTV.setText(creditSt)
-//
-//            mServerRequestManager.getPriceTier(object : ServerRequestManager.OnRequestFinishedListener() {
-//                fun onSuccess(result: ServerResponse) {
-//                    progressDialog.dismiss()
-//                    if (result.getCode() === 1) {
-//                        creditPackageList.clear()
-//                        creditPackageRV.setVisibility(View.VISIBLE)
-//                        val tagJsonArray: JSONArray
-//                        try {
-//                            tagJsonArray = JSONArray(result.getDataSt())
-//                            for (i in 0 until tagJsonArray.length()) {
-//                                val creditPackage = CreditPackage(tagJsonArray.getJSONObject(i))
-//                                creditPackageList.add(creditPackage)
-//                            }
-//                        } catch (e: JSONException) {
-//                            e.printStackTrace()
-//                        }
-//
-//                        showData()
-//                    } else {
-//                        creditPackageRV.setVisibility(View.GONE)
-//                    }
-//                }
-//
-//                fun onError(err: ServerError) {
-//                    progressDialog.dismiss()
-//                    Log.i("Get Price Tier Failed", err.getMessage())
-//                }
-//            })
-//        } catch (e: JSONException) {
-//            e.printStackTrace()
-//        }
-//
-//    }
-//
-//    fun onError(err: ServerError) {
-//        progressDialog.dismiss()
-//    }
-//})
