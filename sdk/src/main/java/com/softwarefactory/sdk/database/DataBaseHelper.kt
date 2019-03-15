@@ -13,10 +13,10 @@ class DataBaseHelper(private val mContext: Context) : SQLiteOpenHelper(mContext,
     private var mDataBase: SQLiteDatabase? = null
 
     init {
-        if (android.os.Build.VERSION.SDK_INT >= 17) {
-            DB_PATH = mContext.applicationInfo.dataDir + "/databases/"
+        DB_PATH = if (android.os.Build.VERSION.SDK_INT >= 17) {
+            mContext.applicationInfo.dataDir + "/databases/"
         } else {
-            DB_PATH = "/data/data/" + mContext.packageName + "/databases/"
+            "/data/data/" + mContext.packageName + "/databases/"
         }
     }// 1? Its database Version
 
